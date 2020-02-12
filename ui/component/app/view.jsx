@@ -137,8 +137,8 @@ function App(props: Props) {
 
   useEffect(() => {
     // $FlowFixMe
-    document.documentElement.setAttribute('theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('theme', 'afterdark');
+  }, []);
 
   useEffect(() => {
     if (!languages.includes(language)) {

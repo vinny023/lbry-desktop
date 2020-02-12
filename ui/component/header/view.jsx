@@ -212,10 +212,6 @@ const Header = (props: Props) => {
                   <Icon aria-hidden icon={ICONS.HELP} />
                   {__('Help')}
                 </MenuItem>
-                <MenuItem className="menu__link" onSelect={handleThemeToggle}>
-                  <Icon icon={currentTheme === 'light' ? ICONS.DARK : ICONS.LIGHT} />
-                  {currentTheme === 'light' ? __('Dark') : __('Light')}
-                </MenuItem>
               </MenuList>
             </Menu>
             {IS_WEB && !authenticated && (
