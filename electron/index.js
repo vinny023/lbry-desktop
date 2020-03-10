@@ -322,27 +322,43 @@ ipcMain.on('version-info-requested', () => {
 // In a few months, we can remove the keytar dependency and below calls once
 // enough users have moved over to cookies
 ipcMain.on('get-auth-token', event => {
-  keytar.getPassword('LBRY', 'auth_token').then(token => {
-    event.sender.send('auth-token-response', token ? token.toString().trim() : null);
-  });
+  try {
+    keytar.getPassword('LBRY', 'auth_token').then(token => {
+      event.sender.send('auth-token-response', token ? token.toString().trim() : null);
+    });
+  } catch (e) {
+    event.sender.send('auth-token-response', null);
+  }
 });
 
 ipcMain.on('delete-auth-token', (event, password) => {
-  keytar.deletePassword('LBRY', 'auth_token', password).then(res => {
-    event.sender.send('delete-auth-token-response', res);
-  });
+  try {
+    keytar.deletePassword('LBRY', 'auth_token', password).then(() => {
+      event.sender.send('delete-auth-token-response');
+    });
+  } catch (e) {
+    event.sender.send('delete-auth-token-response');
+  }
 });
 
 ipcMain.on('get-password', event => {
-  keytar.getPassword('LBRY', 'wallet_password').then(password => {
-    event.sender.send('get-password-response', password ? password.toString() : null);
-  });
+  try {
+    keytar.getPassword('LBRY', 'wallet_password').then(password => {
+      event.sender.send('get-password-response', password ? password.toString() : null);
+    });
+  } catch (e) {
+    event.sender.send('get-password-response', null);
+  }
 });
 
 ipcMain.on('delete-password', event => {
-  keytar.deletePassword('LBRY', 'wallet_password').then(res => {
-    event.sender.send('delete-password-response', res);
-  });
+  try {
+    keytar.deletePassword('LBRY', 'wallet_password').then(() => {
+      event.sender.send('delete-password-response');
+    });
+  } catch (e) {
+    event.sender.send('delete-password-response');
+  }
 });
 
 process.on('uncaughtException', error => {
