@@ -54,7 +54,7 @@ function AppViewer(props: Props) {
           style={{ border: 0, width: '100%', height: '100%' }}
           useragent="Mozilla/5.0 AppleWebKit/537 Chrome/60 Safari/537"
           enableremotemodule="false"
-          webpreferences="sandbox=true,contextIsolation=true,webviewTag=false,enableRemoteModule=false,devTools=false"
+          webpreferences="sandbox=true,nodeIntegration=false,contextIsolation=true,webviewTag=false,enableRemoteModule=false,devTools=false"
         />
       )}
     </div>

@@ -37,6 +37,7 @@ export default appState => {
       // Disable renderer process's webSecurity on development to enable CORS.
       webSecurity: !isDev,
       plugins: true,
+      nodeIntegration: true,
     },
   };
   const lbryProto = 'lbry://';
