@@ -554,9 +554,12 @@ export function doGetAndPopulatePreferences() {
 
 export function doSyncWithPreferences() {
   return dispatch => {
-    function handleSyncComplete() {
-      // we just got sync data, better update our channels
-      dispatch(doFetchChannelListMine());
+    function handleSyncComplete(error, newDataSinceLastSync) {
+      if (!error && newDataSinceLastSync) {
+        // we just got sync data, better update our channels
+        dispatch(doFetchChannelListMine());
+      }
+
       dispatch(doGetAndPopulatePreferences());
     }
 
