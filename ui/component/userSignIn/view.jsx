@@ -83,8 +83,8 @@ function UserSignIn(props: Props) {
   // The verbose variable names are an attempt to alleviate _some_ of the confusion from handling all edge cases that come from
   // reward claiming, channel creation, account syncing, and youtube transfer
   // The possible screens for the sign in flow
-  const showEmail = !emailToVerify && !hasVerifiedEmail;
-  const showEmailVerification = emailToVerify && !hasVerifiedEmail;
+  const showEmail = !hasVerifiedEmail;
+  // const showEmailVerification = emailToVerify && !hasVerifiedEmail;
   const showUserVerification = hasVerifiedEmail && !rewardsApproved && !isIdentityVerified && !hasSkippedRewards;
   const showSyncPassword = syncEnabled && getSyncError;
   const showChannelCreation =
@@ -123,7 +123,7 @@ function UserSignIn(props: Props) {
   // If it never finds one, assume the user has completed every step and redirect them
   const SIGN_IN_FLOW = [
     showEmail && <UserEmailNew />,
-    showEmailVerification && <UserEmailVerify />,
+    // showEmailVerification && <UserEmailVerify />,
     showUserVerification && <UserVerify onSkip={() => setHasSkippedRewards(true)} />,
     showChannelCreation && <UserFirstChannel />,
     showFollowIntro && (

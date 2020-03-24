@@ -1,5 +1,6 @@
 // @flow
 import React, { useState } from 'react';
+import { Lbryio } from 'lbryinc';
 import { FormField, Form } from 'component/common/form';
 import Button from 'component/button';
 import analytics from 'analytics';
@@ -21,6 +22,7 @@ function UserEmailNew(props: Props) {
   const { errorMessage, isPending, addUserEmail, setSync, daemonSettings, setShareDiagnosticData } = props;
   const { share_usage_data: shareUsageData } = daemonSettings;
   const [newEmail, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [localShareUsageData, setLocalShareUsageData] = React.useState(false);
   const [formSyncEnabled, setFormSyncEnabled] = useState(true);
   const valid = newEmail.match(EMAIL_REGEX);
@@ -29,13 +31,24 @@ function UserEmailNew(props: Props) {
     setLocalShareUsageData(!localShareUsageData);
   }
 
+  // function handleSubmit() {
+  //   setSync(formSyncEnabled);
+  //   addUserEmail(newEmail);
+  //   // @if TARGET='app'
+  //   setShareDiagnosticData(true);
+  //   // @endif
+  //   analytics.emailProvidedEvent();
+  // }
+
   function handleSubmit() {
-    setSync(formSyncEnabled);
-    addUserEmail(newEmail);
-    // @if TARGET='app'
-    setShareDiagnosticData(true);
-    // @endif
-    analytics.emailProvidedEvent();
+    Lbryio.call('user_email', 'new', { email, send_verification_email: true }, 'post').catch(error => {
+      // If exists, ignore?
+
+      Lbryio.call('user_password', 'login', { email: newEmail, password }).then(response => {
+        // If succeess
+        window.location.href = '/';
+      });
+    });
   }
 
   return (
@@ -59,6 +72,14 @@ function UserEmailNew(props: Props) {
           value={newEmail}
           error={errorMessage}
           onChange={e => setEmail(e.target.value)}
+        />
+        <FormField
+          placeholder={__('xxxxxx')}
+          type="password"
+          name="sign_in_password"
+          label={__('Password')}
+          value={password}
+          onChange={e => setPassword(e.target.value)}
         />
 
         {!IS_WEB && (
@@ -96,7 +117,7 @@ function UserEmailNew(props: Props) {
             button="primary"
             type="submit"
             label={__('Continue')}
-            disabled={!newEmail || !valid || (!IS_WEB && (!localShareUsageData && !shareUsageData)) || isPending}
+            disabled={!newEmail || !valid || (!IS_WEB && !localShareUsageData && !shareUsageData) || isPending}
           />
         </div>
       </Form>
