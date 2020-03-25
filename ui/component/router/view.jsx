@@ -28,6 +28,7 @@ import TagsFollowingManagePage from 'page/tagsFollowingManage';
 import ListBlockedPage from 'page/listBlocked';
 import FourOhFourPage from 'page/fourOhFour';
 import SignInPage from 'page/signIn';
+import SignUpPage from 'page/signUp';
 import SignInVerifyPage from 'page/signInVerify';
 import ChannelsPage from 'page/channels';
 import EmbedWrapperPage from 'page/embedWrapper';
@@ -152,6 +153,7 @@ function AppRouter(props: Props) {
 
       <Route path={`/`} exact component={HomePage} />
       <Route path={`/$/${PAGES.DISCOVER}`} exact component={DiscoverPage} />
+      <Route path={`/$/${PAGES.AUTH_SIGNUP}`} exact component={SignUpPage} />
       <Route path={`/$/${PAGES.AUTH}`} exact component={SignInPage} />
       <Route path={`/$/${PAGES.AUTH}/*`} exact component={SignInPage} />
       <Route path={`/$/${PAGES.WELCOME}`} exact component={Welcome} />

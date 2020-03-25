@@ -1,4 +1,5 @@
 // @flow
+import * as PAGES from 'constants/pages';
 import React, { useState } from 'react';
 import { Lbryio } from 'lbryinc';
 import { FormField, Form } from 'component/common/form';
@@ -6,6 +7,7 @@ import Button from 'component/button';
 import analytics from 'analytics';
 import { EMAIL_REGEX } from 'constants/email';
 import I18nMessage from 'component/i18nMessage';
+import { useHistory } from 'react-router-dom';
 
 type Props = {
   errorMessage: ?string,
@@ -21,11 +23,13 @@ type Props = {
 function UserEmailNew(props: Props) {
   const { errorMessage, isPending, addUserEmail, setSync, daemonSettings, setShareDiagnosticData } = props;
   const { share_usage_data: shareUsageData } = daemonSettings;
-  const [newEmail, setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('There was an error signing in!');
   const [localShareUsageData, setLocalShareUsageData] = React.useState(false);
   const [formSyncEnabled, setFormSyncEnabled] = useState(true);
-  const valid = newEmail.match(EMAIL_REGEX);
+  const { replace } = useHistory();
+  const valid = email.match(EMAIL_REGEX);
 
   function handleUsageDataChange() {
     setLocalShareUsageData(!localShareUsageData);
@@ -33,7 +37,7 @@ function UserEmailNew(props: Props) {
 
   // function handleSubmit() {
   //   setSync(formSyncEnabled);
-  //   addUserEmail(newEmail);
+  //   addUserEmail(email);
   //   // @if TARGET='app'
   //   setShareDiagnosticData(true);
   //   // @endif
@@ -41,27 +45,22 @@ function UserEmailNew(props: Props) {
   // }
 
   function handleSubmit() {
-    Lbryio.call('user_email', 'new', { email, send_verification_email: true }, 'post').catch(error => {
-      // If exists, ignore?
-
-      Lbryio.call('user_password', 'login', { email: newEmail, password }).then(response => {
-        // If succeess
+    Lbryio.call('user_password', 'login', { email, password }, 'post')
+      .then(response => {
+        // call user/me
         window.location.href = '/';
-      });
-    });
+      })
+      .catch(error => {});
   }
 
   return (
     <React.Fragment>
-      <h1 className="section__title--large">{__('Sign In to lbry.tv')}</h1>
+      <h1 className="section__title--large">{__('Sign Up with lbry.tv')}</h1>
+      {/* @if TARGET='app' */}
       <p className="section__subtitle">
-        {/* @if TARGET='web' */}
-        {__('Create a new account or sign in.')}
-        {/* @endif */}
-        {/* @if TARGET='app' */}
         {__('An account with lbry.tv allows you to earn rewards and backup your data.')}
-        {/* @endif */}
       </p>
+      {/* @endif */}
       <Form onSubmit={handleSubmit} className="section__body">
         <FormField
           autoFocus
@@ -69,7 +68,7 @@ function UserEmailNew(props: Props) {
           type="email"
           name="sign_up_email"
           label={__('Email')}
-          value={newEmail}
+          value={email}
           error={errorMessage}
           onChange={e => setEmail(e.target.value)}
         />
@@ -112,33 +111,34 @@ function UserEmailNew(props: Props) {
             }
           />
         )}
-        <div className="card__actions">
+        <div className="section__actions">
           <Button
             button="primary"
             type="submit"
             label={__('Continue')}
-            disabled={!newEmail || !valid || (!IS_WEB && !localShareUsageData && !shareUsageData) || isPending}
+            disabled={!email || !valid || (!IS_WEB && !localShareUsageData && !shareUsageData) || isPending}
           />
+          {error && <p className="error-text">{error}</p>}
         </div>
       </Form>
       {/* @if TARGET='web' */}
       <p className="help">
-        <React.Fragment>
-          <I18nMessage
-            tokens={{
-              terms: (
-                <Button
-                  tabIndex="2"
-                  button="link"
-                  href="https://www.lbry.com/termsofservice"
-                  label={__('Terms of Service')}
-                />
-              ),
-            }}
-          >
-            By continuing, I agree to the %terms% and confirm I am over the age of 13.
-          </I18nMessage>
-        </React.Fragment>
+        <I18nMessage
+          tokens={{
+            terms: <Button button="link" href="https://www.lbry.com/termsofservice" label={__('Terms of Service')} />,
+          }}
+        >
+          By continuing, I agree to the %terms% and confirm I am over the age of 13.
+        </I18nMessage>
+      </p>
+      <p className="help">
+        <I18nMessage
+          tokens={{
+            sign_in: <Button button="link" navigate={`/$/${PAGES.AUTH}`} label={__('Sign In')} />,
+          }}
+        >
+          Already have an account? %sign_in%
+        </I18nMessage>
       </p>
       {/* @endif */}
     </React.Fragment>

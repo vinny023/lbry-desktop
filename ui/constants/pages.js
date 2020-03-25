@@ -1,4 +1,5 @@
 exports.AUTH = 'signin';
+exports.AUTH_SIGNUP = 'signup';
 exports.AUTH_VERIFY = 'verify';
 exports.BACKUP = 'backup';
 exports.CHANNEL = 'channel';

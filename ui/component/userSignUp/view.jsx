@@ -2,7 +2,7 @@
 import * as PAGES from 'constants/pages';
 import React from 'react';
 import { withRouter } from 'react-router';
-import UserEmailReturning from 'component/userEmailReturning';
+import UserEmailNew from 'component/userEmailNew';
 import UserEmailVerify from 'component/userEmailVerify';
 import UserFirstChannel from 'component/userFirstChannel';
 import UserChannelFollowIntro from 'component/userChannelFollowIntro';
@@ -84,7 +84,7 @@ function UserSignIn(props: Props) {
   // reward claiming, channel creation, account syncing, and youtube transfer
   // The possible screens for the sign in flow
   const showEmail = !hasVerifiedEmail;
-  const showEmailVerification = emailToVerify && !hasVerifiedEmail;
+  // const showEmailVerification = emailToVerify && !hasVerifiedEmail;
   const showUserVerification = hasVerifiedEmail && !rewardsApproved && !isIdentityVerified && !hasSkippedRewards;
   const showSyncPassword = syncEnabled && getSyncError;
   const showChannelCreation =
@@ -122,65 +122,65 @@ function UserSignIn(props: Props) {
   // Loop through this list from the end, until it finds a matching component
   // If it never finds one, assume the user has completed every step and redirect them
   const SIGN_IN_FLOW = [
-    showEmail && <UserEmailReturning />,
-    showEmailVerification && <UserEmailVerify />,
-    showUserVerification && <UserVerify onSkip={() => setHasSkippedRewards(true)} />,
-    showChannelCreation && <UserFirstChannel />,
-    showFollowIntro && (
-      <UserChannelFollowIntro
-        onContinue={() => {
-          let url = `/$/${PAGES.AUTH}?reset_scroll=1`;
-          if (redirect) {
-            url += `&redirect=${redirect}`;
-          }
-          if (shouldRedirectImmediately) {
-            url += `&immediate=true`;
-          }
+    showEmail && <UserEmailNew />,
+    // showEmailVerification && <UserEmailVerify />,
+    // showUserVerification && <UserVerify onSkip={() => setHasSkippedRewards(true)} />,
+    // showChannelCreation && <UserFirstChannel />,
+    // showFollowIntro && (
+    //   <UserChannelFollowIntro
+    //     onContinue={() => {
+    //       let url = `/$/${PAGES.AUTH}?reset_scroll=1`;
+    //       if (redirect) {
+    //         url += `&redirect=${redirect}`;
+    //       }
+    //       if (shouldRedirectImmediately) {
+    //         url += `&immediate=true`;
+    //       }
 
-          history.replace(url);
-          setHasSeenFollowList(true);
-        }}
-        onBack={() => {
-          let url = `/$/${PAGES.AUTH}?reset_scroll=1&step=tags`;
-          if (redirect) {
-            url += `&redirect=${redirect}`;
-          }
-          if (shouldRedirectImmediately) {
-            url += `&immediate=true`;
-          }
+    //       history.replace(url);
+    //       setHasSeenFollowList(true);
+    //     }}
+    //     onBack={() => {
+    //       let url = `/$/${PAGES.AUTH}?reset_scroll=1&step=tags`;
+    //       if (redirect) {
+    //         url += `&redirect=${redirect}`;
+    //       }
+    //       if (shouldRedirectImmediately) {
+    //         url += `&immediate=true`;
+    //       }
 
-          history.replace(url);
-          setHasSeenFollowList(false);
-        }}
-      />
-    ),
-    showTagsIntro && (
-      <UserTagFollowIntro
-        onContinue={() => {
-          let url = `/$/${PAGES.AUTH}?reset_scroll=1&step=channels`;
-          if (redirect) {
-            url += `&redirect=${redirect}`;
-          }
-          if (shouldRedirectImmediately) {
-            url += `&immediate=true`;
-          }
+    //       history.replace(url);
+    //       setHasSeenFollowList(false);
+    //     }}
+    //   />
+    // ),
+    // showTagsIntro && (
+    //   <UserTagFollowIntro
+    //     onContinue={() => {
+    //       let url = `/$/${PAGES.AUTH}?reset_scroll=1&step=channels`;
+    //       if (redirect) {
+    //         url += `&redirect=${redirect}`;
+    //       }
+    //       if (shouldRedirectImmediately) {
+    //         url += `&immediate=true`;
+    //       }
 
-          history.replace(url);
-          setHasSeenTagsList(true);
-        }}
-      />
-    ),
-    showYoutubeTransfer && (
-      <div>
-        <YoutubeTransferStatus /> <Confetti recycle={false} style={{ position: 'fixed' }} />
-      </div>
-    ),
-    showSyncPassword && <SyncPassword />,
-    showLoadingSpinner && (
-      <div className="main--empty">
-        <Spinner />
-      </div>
-    ),
+    //       history.replace(url);
+    //       setHasSeenTagsList(true);
+    //     }}
+    //   />
+    // ),
+    // showYoutubeTransfer && (
+    //   <div>
+    //     <YoutubeTransferStatus /> <Confetti recycle={false} style={{ position: 'fixed' }} />
+    //   </div>
+    // ),
+    // showSyncPassword && <SyncPassword />,
+    // showLoadingSpinner && (
+    //   <div className="main--empty">
+    //     <Spinner />
+    //   </div>
+    // ),
   ];
 
   function getSignInStep() {
