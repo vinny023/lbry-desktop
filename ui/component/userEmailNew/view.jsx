@@ -8,6 +8,7 @@ import analytics from 'analytics';
 import { EMAIL_REGEX } from 'constants/email';
 import I18nMessage from 'component/i18nMessage';
 import { useHistory } from 'react-router-dom';
+import usePersistedState from 'effects/use-persisted-state';
 
 type Props = {
   errorMessage: ?string,
@@ -21,36 +22,28 @@ type Props = {
 };
 
 function UserEmailNew(props: Props) {
-  const { errorMessage, isPending, addUserEmail, setSync, daemonSettings, setShareDiagnosticData } = props;
+  const { errorMessage, isPending, doSignIn, setSync, daemonSettings, setShareDiagnosticData } = props;
   const { share_usage_data: shareUsageData } = daemonSettings;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState();
+  const [showPassword, setShowPassword] = usePersistedState('sign-up-show-password', false);
   const [localShareUsageData, setLocalShareUsageData] = React.useState(false);
   const [formSyncEnabled, setFormSyncEnabled] = useState(true);
   const { replace } = useHistory();
   const valid = email.match(EMAIL_REGEX);
 
+  console.log('error', errorMessage);
   function handleUsageDataChange() {
     setLocalShareUsageData(!localShareUsageData);
   }
 
-  // function handleSubmit() {
-  //   setSync(formSyncEnabled);
-  //   addUserEmail(email);
-  //   // @if TARGET='app'
-  //   setShareDiagnosticData(true);
-  //   // @endif
-  //   analytics.emailProvidedEvent();
-  // }
-
   function handleSubmit() {
-    Lbryio.call('user_password', 'login', { email, password }, 'post')
-      .then(response => {
-        // call user/me
-        window.location.href = '/';
-      })
-      .catch(error => {});
+    setSync(formSyncEnabled);
+    doSignIn(email, password === '' ? undefined : password);
+    // @if TARGET='app'
+    setShareDiagnosticData(true);
+    // @endif
+    analytics.emailProvidedEvent();
   }
 
   return (
@@ -69,17 +62,28 @@ function UserEmailNew(props: Props) {
           name="sign_up_email"
           label={__('Email')}
           value={email}
-          error={errorMessage}
           onChange={e => setEmail(e.target.value)}
         />
-        <FormField
-          placeholder={__('xxxxxx')}
-          type="password"
-          name="sign_in_password"
-          label={__('Password')}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
+        {showPassword && (
+          <FormField
+            placeholder="•••••••••••"
+            type="password"
+            name="sign_in_password"
+            label={__('Password')}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        )}
+        <fieldset-section>
+          <FormField
+            type="checkbox"
+            placeholder={__('hotstuff_96@hotmail.com')}
+            name="sign_in_toggle_password"
+            label={__('Protect your account with a password')}
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+        </fieldset-section>
 
         {!IS_WEB && (
           <FormField
@@ -118,7 +122,9 @@ function UserEmailNew(props: Props) {
             label={__('Continue')}
             disabled={!email || !valid || (!IS_WEB && !localShareUsageData && !shareUsageData) || isPending}
           />
-          {error && <p className="error-text">{error}</p>}
+          {errorMessage && (
+            <p className="error-text">{typeof errorMessage === 'object' ? errorMessage.message : errorMessage}</p>
+          )}
         </div>
       </Form>
       {/* @if TARGET='web' */}
