@@ -8,6 +8,8 @@ import analytics from 'analytics';
 import { EMAIL_REGEX } from 'constants/email';
 import I18nMessage from 'component/i18nMessage';
 import { useHistory } from 'react-router-dom';
+import usePersistedState from 'effects/use-persisted-state';
+import UserEmailVerify from 'component/userEmailVerify';
 
 type Props = {
   errorMessage: ?string,
@@ -21,62 +23,61 @@ type Props = {
 };
 
 function UserEmailReturning(props: Props) {
-  const { errorMessage, isPending, addUserEmail, setSync, daemonSettings, setShareDiagnosticData } = props;
-  const { share_usage_data: shareUsageData } = daemonSettings;
+  const { errorMessage, doUserSignIn, emailToVerify } = props;
   const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = usePersistedState('sign-in-show-password', false);
   const [password, setPassword] = useState('');
-  const [localShareUsageData, setLocalShareUsageData] = React.useState(false);
-  const [formSyncEnabled, setFormSyncEnabled] = useState(true);
-  const { replace } = useHistory();
   const valid = email.match(EMAIL_REGEX);
-
-  function handleUsageDataChange() {
-    setLocalShareUsageData(!localShareUsageData);
-  }
-
-  // function handleSubmit() {
-  //   setSync(formSyncEnabled);
-  //   addUserEmail(email);
-  //   // @if TARGET='app'
-  //   setShareDiagnosticData(true);
-  //   // @endif
-  //   analytics.emailProvidedEvent();
-  // }
+  const showEmailVerification = emailToVerify;
 
   function handleSubmit() {
-    replace(`/$/${PAGES.AUTH}?email_prefill=${email}`);
-    // Lbryio.call('user_email', 'new', { email, password }, 'post').catch(error => {
-    //   // If exists, ignore?
+    analytics.emailProvidedEvent();
+    doUserSignIn(email, password === '' ? undefined : password);
 
-    //   Lbryio.call('user_password', 'login', { email: email, password }).then(response => {
-    //     // If succeess
-    //     window.location.href = '/';
-    //   });
-    // });
+    // @if TARGET='app'
+    setShareDiagnosticData(true);
+    // @endif
   }
 
-  return (
-    <React.Fragment>
-      <h1 className="section__title--large">{__('Sign In with lbry.tv')}</h1>
+  return showEmailVerification ? (
+    <UserEmailVerify />
+  ) : (
+    <div>
+      <h1 className="section__title--large">{__('Sign In to lbry.tv')}</h1>
       <Form onSubmit={handleSubmit} className="section__body">
         <FormField
           autoFocus
           placeholder={__('hotstuff_96@hotmail.com')}
           type="email"
-          name="sign_up_email"
+          name="sign_in_email"
           label={__('Email')}
           value={email}
-          error={errorMessage}
           onChange={e => setEmail(e.target.value)}
         />
-
-        <div className="card__actions">
-          <Button
-            button="primary"
-            type="submit"
-            label={__('Continue')}
-            disabled={!email || !valid || (!IS_WEB && !localShareUsageData && !shareUsageData) || isPending}
+        {showPassword && (
+          <FormField
+            placeholder="•••••••••••"
+            type="password"
+            name="sign_in_password"
+            label={__('Password')}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
+        )}
+        <fieldset-section>
+          <FormField
+            type="checkbox"
+            placeholder={__('hotstuff_96@hotmail.com')}
+            name="sign_in_toggle_password"
+            label={__('Sign in with a password')}
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+        </fieldset-section>
+
+        <div className="section__actions">
+          <Button button="primary" type="submit" label={__('Continue')} disabled={!email || !valid} />
+          {errorMessage && <div className="error-text">{errorMessage}</div>}
         </div>
       </Form>
       <p className="help">
@@ -88,7 +89,7 @@ function UserEmailReturning(props: Props) {
           Don't have an account? %sign_up%
         </I18nMessage>
       </p>
-    </React.Fragment>
+    </div>
   );
 }
 

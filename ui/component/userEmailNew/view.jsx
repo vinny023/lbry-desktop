@@ -25,7 +25,7 @@ function UserEmailNew(props: Props) {
   const { share_usage_data: shareUsageData } = daemonSettings;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('There was an error signing in!');
+  const [error, setError] = useState();
   const [localShareUsageData, setLocalShareUsageData] = React.useState(false);
   const [formSyncEnabled, setFormSyncEnabled] = useState(true);
   const { replace } = useHistory();

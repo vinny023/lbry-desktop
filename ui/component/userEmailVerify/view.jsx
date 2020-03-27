@@ -24,11 +24,14 @@ class UserEmailVerify extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
-    this.emailVerifyCheckInterval = setInterval(() => this.checkIfVerified(), 5000);
+    this.emailVerifyCheckInterval = setInterval(() => {
+      this.checkIfVerified();
+    }, 5000);
   }
 
   componentDidUpdate() {
     const { user } = this.props;
+
     if (this.emailVerifyCheckInterval && user && user.has_verified_email) {
       clearInterval(this.emailVerifyCheckInterval);
     }
