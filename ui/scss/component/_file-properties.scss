@@ -16,6 +16,16 @@
   }
 }
 
+.file-properties--large {
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-large);
+  margin-left: 0;
+
+  & > * {
+    margin-top: var(--spacing-small);
+  }
+}
+
 .file-properties--small {
   font-size: var(--font-xsmall);
   line-height: 1.2;
@@ -31,41 +41,14 @@
   }
 }
 
-.file-properties__purchased {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-left: var(--spacing-xsmall);
-  color: var(--color-gray-5);
-
-  span,
-  svg {
-    position: relative;
-    fill: white;
-  }
-
-  .icon {
-    margin-left: 0.5rem;
-  }
-
-  &::before {
-    position: absolute;
-    content: '';
-    left: -0.4rem;
-    right: -5rem;
-    height: 1.75rem;
-    transform: skew(20deg);
-    background-color: var(--color-purchased);
-  }
-}
-
+.file-properties__purchased,
 .file-properties__not-purchased {
   position: relative;
   display: flex;
   align-items: center;
-  color: var(--color-purchased-text);
 
-  span {
+  span,
+  .icon {
     position: relative;
     margin-left: 0.75rem;
   }
@@ -76,18 +59,61 @@
     left: 0;
     right: -5rem;
     height: 1.75rem;
-    background-color: var(--color-purchased-alt);
-    border: 2px solid var(--color-purchased);
     transform: skew(20deg);
   }
 }
 
-.file-properties--large {
-  flex-wrap: wrap;
-  margin-bottom: var(--spacing-large);
-  margin-left: 0;
+.file-properties__purchased {
+  margin-left: var(--spacing-xsmall);
+  color: var(--color-gray-5);
 
-  & > * {
-    margin-top: var(--spacing-small);
+  .icon {
+    fill: white;
+  }
+
+  &::before {
+    background-color: var(--color-purchased);
+  }
+}
+
+.file-properties__not-purchased {
+  color: var(--color-purchased-text);
+
+  &::before {
+    background-color: var(--color-purchased-alt);
+    border: 2px solid var(--color-purchased);
+  }
+}
+
+.file-properties__purchased--large,
+.file-properties__not-purchased--large {
+  font-size: var(--font-body);
+
+  &::before {
+    height: 3rem;
+  }
+}
+
+.file-properties__purchased--large {
+  top: -0.25rem;
+
+  .icon {
+    margin: 0 var(--spacing-medium);
+    margin-left: var(--spacing-large);
+  }
+}
+
+.file-properties__not-purchased--large {
+  top: -0.25rem;
+
+  span {
+    margin: 0 var(--spacing-medium);
+    margin-left: var(--spacing-large);
+    top: -0.25rem;
+  }
+
+  &::before {
+    border-width: 5px;
+    border-top-width: 0;
   }
 }

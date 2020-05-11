@@ -33,6 +33,8 @@ const select = (state, props) => {
     }
   }
 
+  uri = 'lbry://@mime/test-paid-video-0.1lbc#9';
+
   return {
     claim: makeSelectClaimForUri(uri)(state),
     isResolvingUri: makeSelectIsUriResolving(uri)(state),
@@ -49,7 +51,4 @@ const perform = dispatch => ({
   resolveUri: uri => dispatch(doResolveUri(uri)),
 });
 
-export default connect(
-  select,
-  perform
-)(ShowPage);
+export default connect(select, perform)(ShowPage);

@@ -43,7 +43,7 @@ class ModalAffirmPurchase extends React.PureComponent<Props> {
             <I18nMessage
               tokens={{
                 claim_title: <strong>{title ? `"${title}"` : uri}</strong>,
-                amount: <FilePrice uri={uri} showFullPrice inheritStyle />,
+                amount: <FilePrice uri={uri} showFullPrice />,
               }}
             >
               This will purchase %claim_title% for %amount%.

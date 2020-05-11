@@ -38,7 +38,7 @@ function ShowPage(props: Props) {
     if (canonicalUrl) {
       const canonicalUrlPath = '/' + canonicalUrl.replace(/^lbry:\/\//, '').replace(/#/g, ':');
       if (canonicalUrlPath !== window.location.pathname) {
-        history.replaceState(history.state, '', canonicalUrlPath);
+        // history.replaceState(history.state, '', canonicalUrlPath);
       }
     }
     // @endif
