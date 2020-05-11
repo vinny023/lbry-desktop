@@ -1,6 +1,15 @@
 // Generic html styles used across the App
 // component specific styling should go in the component scss file
 
+.purchase-stuff {
+  display: flex;
+  justify-content: space-evenly;
+
+  * {
+    width: 50%;
+  }
+}
+
 *::selection {
   background-color: var(--color-text-selection-bg);
   color: var(--color-text-selection);

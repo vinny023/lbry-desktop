@@ -33,9 +33,9 @@ const select = (state, props) => {
     }
   }
 
-  uri = 'lbry://@mime/test-paid-video-0.1lbc#9';
+  uri = 'lbry://@jeff#b/lbry-cbr-cbz-test-20200204#3';
 
-  return {
+  https: return {
     claim: makeSelectClaimForUri(uri)(state),
     isResolvingUri: makeSelectIsUriResolving(uri)(state),
     blackListedOutpoints: selectBlackListedOutpoints(state),

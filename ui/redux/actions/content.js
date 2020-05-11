@@ -198,7 +198,8 @@ export function doPlayUri(
     const instantPurchaseMax = makeSelectClientSetting(SETTINGS.INSTANT_PURCHASE_MAX)(state);
 
     function beginGetFile() {
-      dispatch(doPurchaseUriWrapper(uri, cost, saveFile, cb));
+      console.log('GET');
+      // dispatch(doPurchaseUriWrapper(uri, cost, saveFile, cb));
     }
 
     function attemptPlay(instantPurchaseMax = null) {

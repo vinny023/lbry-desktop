@@ -50,6 +50,8 @@ function ModalRouter(props: Props) {
   const { modal, error, location, hideModal } = props;
   const { pathname } = location;
 
+  return <ModalAffirmPurchase uri={'lbry://@jeff#b/lbry-cbr-cbz-test-20200204#3'} />;
+
   React.useEffect(() => {
     hideModal();
   }, [pathname, hideModal]);

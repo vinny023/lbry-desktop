@@ -40,18 +40,24 @@ class ModalAffirmPurchase extends React.PureComponent<Props> {
         <Card
           title={modalTitle}
           subtitle={
-            <I18nMessage
-              tokens={{
-                claim_title: <strong>{title ? `"${title}"` : uri}</strong>,
-                amount: <FilePrice uri={uri} showFullPrice />,
-              }}
-            >
-              This will purchase %claim_title% for %amount%.
-            </I18nMessage>
+            <div className="purchase-stuff">
+              <div>
+                <I18nMessage
+                  tokens={{
+                    claim_title: <strong>{title ? `"${title}"` : uri}</strong>,
+                  }}
+                >
+                  Are you sure you want to purchase %claim_title%?
+                </I18nMessage>
+              </div>
+              <div>
+                <FilePrice uri={uri} showFullPrice large />
+              </div>
+            </div>
           }
           actions={
             <div className="section__actions">
-              <Button button="primary" label={__('Confirm')} onClick={this.onAffirmPurchase} />
+              <Button button="primary" label={__('Purchase')} onClick={this.onAffirmPurchase} />
               <Button button="link" label={__('Cancel')} onClick={cancelPurchase} />
             </div>
           }
