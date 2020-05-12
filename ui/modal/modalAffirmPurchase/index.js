@@ -14,13 +14,10 @@ const perform = dispatch => ({
     dispatch(doHideModal());
   },
   closeModal: () => dispatch(doHideModal()),
-  loadVideo: uri => {
-    dispatch(doSetPlayingUri(uri));
-    dispatch(doPlayUri(uri, true));
+  setPlayingUri: uri => dispatch(doSetPlayingUri(uri)),
+  loadVideo: (uri, onSuccess) => {
+    dispatch(doPlayUri(uri, true, undefined, onSuccess));
   },
 });
 
-export default connect(
-  select,
-  perform
-)(ModalAffirmPurchase);
+export default connect(select, perform)(ModalAffirmPurchase);

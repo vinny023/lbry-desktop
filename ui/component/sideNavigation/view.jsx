@@ -36,9 +36,11 @@ function SideNavigation(props: Props) {
     sticky = true,
     expanded = false,
     location,
+    purchaseUriSuccess,
   } = props;
   const { pathname } = location;
   const isAuthenticated = Boolean(email);
+  const [savedPurchasesCount, setSavedPurchasesCount] = React.useState();
   const [sideInformation, setSideInformation] = usePersistedState(
     'side-navigation:information',
     getSideInformation(pathname)
@@ -64,6 +66,12 @@ function SideNavigation(props: Props) {
     const sideInfo = getSideInformation(pathname);
     setSideInformation(sideInfo);
   }, [pathname, setSideInformation]);
+
+  React.useEffect(() => {
+    if (purchaseUriSuccess) {
+      debugger;
+    }
+  }, [purchaseUriSuccess]);
 
   function buildLink(path, label, icon, onClick, requiresAuth = false) {
     return {

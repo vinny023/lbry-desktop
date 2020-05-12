@@ -30,7 +30,7 @@ function FileTitle(props: Props) {
           )}
         </React.Fragment>
       }
-      titleActions={<FilePrice uri={normalizeURI(uri)} large />}
+      titleActions={<FilePrice uri={normalizeURI(uri)} type="large" />}
       body={
         <React.Fragment>
           <ClaimInsufficientCredits uri={uri} />

@@ -20,6 +20,7 @@ import {
   makeSelectUriIsStreamable,
   selectDownloadingByOutpoint,
   makeSelectClaimForUri,
+  doResolveUri,
 } from 'lbry-redux';
 import { makeSelectCostInfoForUri, Lbryio } from 'lbryinc';
 import { makeSelectClientSetting, selectosNotificationsEnabled, selectDaemonSettings } from 'redux/selectors/settings';
@@ -160,6 +161,8 @@ export function doCloseFloatingPlayer() {
 export function doPurchaseUriWrapper(uri: string, cost: number, saveFile: boolean, cb: ?() => void) {
   return (dispatch: Dispatch, getState: () => any) => {
     function onSuccess(fileInfo) {
+      dispatch(doResolveUri(uri));
+
       if (saveFile) {
         dispatch(doUpdateLoadStatus(uri, fileInfo.outpoint));
       }
@@ -187,6 +190,7 @@ export function doPlayUri(
     const alreadyDownloaded = fileInfo && (fileInfo.completed || (fileInfo.blobs_remaining === 0 && uriIsStreamable));
     const alreadyDownloading = fileInfo && !!downloadingByOutpoint[fileInfo.outpoint];
     if (alreadyDownloading || alreadyDownloaded) {
+      dispatch(doSetPlayingUri(uri));
       return;
     }
 
@@ -198,8 +202,7 @@ export function doPlayUri(
     const instantPurchaseMax = makeSelectClientSetting(SETTINGS.INSTANT_PURCHASE_MAX)(state);
 
     function beginGetFile() {
-      console.log('GET');
-      // dispatch(doPurchaseUriWrapper(uri, cost, saveFile, cb));
+      dispatch(doPurchaseUriWrapper(uri, cost, saveFile, cb));
     }
 
     function attemptPlay(instantPurchaseMax = null) {

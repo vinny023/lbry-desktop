@@ -33,7 +33,7 @@ const select = (state, props) => {
     }
   }
 
-  uri = 'lbry://@jeff#b/lbry-cbr-cbz-test-20200204#3';
+  // uri = 'lbry://@jeff#b/lbry-cbr-cbz-test-20200204#3';
 
   https: return {
     claim: makeSelectClaimForUri(uri)(state),

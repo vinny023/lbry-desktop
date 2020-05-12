@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import classnames from 'classnames';
 import FilePrice from 'component/filePrice';
 import { Modal } from 'modal/modal';
 import Card from 'component/common/card';
@@ -14,57 +15,87 @@ type Props = {
   metadata: StreamMetadata,
 };
 
-class ModalAffirmPurchase extends React.PureComponent<Props> {
-  constructor() {
-    super();
+function ModalAffirmPurchase(props: Props) {
+  const {
+    cancelPurchase,
+    closeModal,
+    loadVideo,
+    metadata: { title },
+    setPlayingUri,
+    uri,
+  } = props;
+  const [success, setSuccess] = React.useState(false);
+  const [purchasing, setPurchasing] = React.useState(false);
 
-    (this: any).onAffirmPurchase = this.onAffirmPurchase.bind(this);
+  const modalTitle = __('Confirm Purchase');
+
+  function onAffirmPurchase() {
+    setPurchasing(true);
+    loadVideo(uri, () => {
+      setPurchasing(false);
+      setSuccess(true);
+    });
   }
 
-  onAffirmPurchase() {
-    this.props.closeModal();
-    this.props.loadVideo(this.props.uri);
-  }
+  React.useEffect(() => {
+    let timeout;
+    if (success) {
+      timeout = setTimeout(() => {
+        closeModal();
+        setSuccess(false);
+        setPlayingUri(uri);
+      }, 2500);
+    }
 
-  render() {
-    const {
-      cancelPurchase,
-      metadata: { title },
-      uri,
-    } = this.props;
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [success, uri]);
 
-    const modalTitle = __('Confirm Purchase');
-
-    return (
-      <Modal type="card" isOpen contentLabel={modalTitle} onAborted={cancelPurchase}>
-        <Card
-          title={modalTitle}
-          subtitle={
-            <div className="purchase-stuff">
-              <div>
-                <I18nMessage
-                  tokens={{
-                    claim_title: <strong>{title ? `"${title}"` : uri}</strong>,
-                  }}
-                >
-                  Are you sure you want to purchase %claim_title%?
-                </I18nMessage>
-              </div>
-              <div>
-                <FilePrice uri={uri} showFullPrice large />
-              </div>
+  return (
+    <Modal type="card" isOpen contentLabel={modalTitle} onAborted={cancelPurchase}>
+      <Card
+        title={modalTitle}
+        subtitle={
+          <div className={classnames('purchase-stuff', { 'purchase-stuff--purchased': success })}>
+            <div>
+              {success && (
+                <div className="purchase-stuff__text--purchased">
+                  {__('Purchased!')}
+                  <div className="purchase_stuff__subtext--purchased">
+                    {__('This content will now be in your Library.')}
+                  </div>
+                </div>
+              )}
+              {/* Keep this message rendered but hidden so the width doesn't change */}
+              <I18nMessage
+                tokens={{
+                  claim_title: <strong>{title ? `"${title}"` : uri}</strong>,
+                }}
+              >
+                Are you sure you want to purchase %claim_title%?
+              </I18nMessage>
             </div>
-          }
-          actions={
-            <div className="section__actions">
-              <Button button="primary" label={__('Purchase')} onClick={this.onAffirmPurchase} />
-              <Button button="link" label={__('Cancel')} onClick={cancelPurchase} />
+            <div>
+              <FilePrice uri={uri} showFullPrice type="modal" overrided={success} />
             </div>
-          }
-        />
-      </Modal>
-    );
-  }
+          </div>
+        }
+        actions={
+          <div className="section__actions" style={success ? { visibility: 'hidden' } : undefined}>
+            <Button
+              button="primary"
+              label={purchasing ? __('Purchasing') : __('Purchase')}
+              onClick={onAffirmPurchase}
+            />
+            <Button button="link" label={__('Cancel')} onClick={cancelPurchase} />
+          </div>
+        }
+      />
+    </Modal>
+  );
 }
 
 export default ModalAffirmPurchase;

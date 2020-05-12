@@ -151,7 +151,7 @@ function AppRouter(props: Props) {
       <Redirect from={`/$/${PAGES.DEPRECATED__TAGS_FOLLOWING}`} to={`/$/${PAGES.TAGS_FOLLOWING}`} />
       <Redirect from={`/$/${PAGES.DEPRECATED__TAGS_FOLLOWING_MANAGE}`} to={`/$/${PAGES.TAGS_FOLLOWING_MANAGE}`} />
 
-      <Route path={`/`} exact component={ShowPage} />
+      {/* <Route path={`/`} exact component={ShowPage} /> */}
       <Route path={`/`} exact component={HomePage} />
       <Route path={`/$/${PAGES.DISCOVER}`} exact component={DiscoverPage} />
       <Route path={`/$/${PAGES.AUTH_SIGNIN}`} exact component={SignInPage} />

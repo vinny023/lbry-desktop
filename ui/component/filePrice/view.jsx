@@ -17,7 +17,7 @@ type Props = {
   showLBC?: boolean,
   hideFree?: boolean, // hide the file price if it's free
   claimWasPurchased: boolean,
-  large: boolean,
+  type?: string,
 };
 
 class FilePrice extends React.PureComponent<Props> {
@@ -42,19 +42,27 @@ class FilePrice extends React.PureComponent<Props> {
   };
 
   render() {
-    const { costInfo, showFullPrice, showLBC, hideFree, claimWasPurchased, large } = this.props;
+    const { costInfo, showFullPrice, showLBC, hideFree, claimWasPurchased, type, overrided } = this.props;
 
     if (!costInfo || !costInfo.cost || (!costInfo.cost && hideFree)) {
       return null;
     }
 
-    return claimWasPurchased ? (
-      <span className={classnames('file-properties__purchased', { 'file-properties__purchased--large': large })}>
-        <Icon icon={ICONS.PURCHASED} size={large ? 22 : undefined} />
+    return claimWasPurchased || overrided ? (
+      <span
+        className={classnames('file-properties__purchased', {
+          'file-properties__purchased--large': type === 'large',
+          'file-properties__purchased--modal': type === 'modal',
+        })}
+      >
+        <Icon icon={ICONS.PURCHASED} size={type === 'large' ? 22 : undefined} />
       </span>
     ) : (
       <CreditAmount
-        className={classnames('file-properties__not-purchased', { 'file-properties__not-purchased--large': large })}
+        className={classnames('file-properties__not-purchased', {
+          'file-properties__not-purchased--large': type === 'large',
+          'file-properties__not-purchased--modal': type === 'modal',
+        })}
         showFree
         badge={false}
         showLBC={showLBC}

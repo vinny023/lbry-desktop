@@ -32,7 +32,9 @@ const select = (state, props) => ({
 
 const perform = dispatch => ({
   play: uri => {
-    // dispatch(doSetPlayingUri(uri));
+    make sure free content works
+    make sure already purchased content works
+    dispatch(doSetPlayingUri(uri)); ???
     dispatch(doPlayUri(uri));
   },
 });
