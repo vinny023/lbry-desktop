@@ -104,3 +104,4 @@ export const PINNED = 'Pinned';
 export const BUY = 'Buy';
 export const SEND = 'Send';
 export const RECEIVE = 'Receive';
+export const NOTIFICATION = 'Bell';
